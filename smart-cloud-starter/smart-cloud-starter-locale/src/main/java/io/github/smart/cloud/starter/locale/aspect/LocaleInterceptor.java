@@ -28,7 +28,7 @@ import java.util.Locale;
 
 /**
  * 国际化拦截器
- *
+ * 为目标业务对象做方法增强
  * @author collin
  * @date 2021-11-11
  */
@@ -47,7 +47,9 @@ public class LocaleInterceptor implements MethodInterceptor, Ordered {
 
     @Override
     public Object invoke(MethodInvocation invocation) throws Throwable {
+        //执行切面命中的目标方法
         Object result = invocation.proceed();
+        //判断返回值是否属于Response，是的话则根据返回的code值，在MessageSource资源中获取对应语言的localMessage
         if (result instanceof Response) {
             Response<?> response = (Response<?>) result;
             if (response == null) {

@@ -79,6 +79,22 @@ public class LocaleAutoConfiguration {
     @Bean
     public Advisor localeAdvisor(final LocaleInterceptor localeInterceptor) {
         StringBuilder expression = new StringBuilder(1024);
+        /**
+         * 方法使用：
+         * execution：用于匹配方法执行的连接点
+         * args：用于匹配当前执行的方法传入的参数为指定类型的执行方法
+         * @args：用于匹配当前执行的方法传入的参数是指定类型的
+         * @annotation：用于匹配当前执行方法持有指定注解的方法 切点引入，在切点定义类中对应方法上定义
+         * @PointCut，然后在@Aspect类中使用完整方法路径()引用，以分离切点定义和使用，方便切点集中管理
+         * 类使用：
+         * within：用于匹配指定类内的方法执行
+         * this：用于匹配当前AOP代理对象类型的执行方法；注意是AOP代理对象的类型匹配，这样就可能包括引入接口也类型匹配
+         * target：用于匹配当前目标对象类型的执行方法；注意是目标对象的类型匹配，这样就不包括引入接口也类型匹配
+         * @within：用于匹配所以持有指定注解的类型内的方法
+         * @target：用于配当前目标对象类型的执行方法，其中目标对象持有指定的注解
+         * 对象使用：
+         * bean：Spring AOP扩展的，AspectJ没有对于指示符，用于匹配特定名称的Bean对象的执行方法
+         */
         expression.append("(@within(org.springframework.stereotype.Controller) || @within(org.springframework.web.bind.annotation.RestController))") //NOPMD - suppressed ConsecutiveLiteralAppends - TODO explain reason for suppression
                 .append("&&")
                 .append('(')
@@ -92,9 +108,12 @@ public class LocaleAutoConfiguration {
 
         AspectJExpressionPointcut localePointcut = new AspectJExpressionPointcut();
         localePointcut.setExpression(expression.toString());
-
+        //此对象会在容器启动时扫描Advisor对象,然后基于切入点为目标对象创建代理对象
+        //然后再执行切入点方法时,自动执行Advice对象通知方法
         DefaultBeanFactoryPointcutAdvisor apiLogAdvisor = new DefaultBeanFactoryPointcutAdvisor();
+        //定义通知
         apiLogAdvisor.setAdvice(localeInterceptor);
+        //定义切点
         apiLogAdvisor.setPointcut(localePointcut);
 
         return apiLogAdvisor;
