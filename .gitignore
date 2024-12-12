@@ -15,5 +15,5 @@ build
 mvnw
 .apt_generated
 .factorypath
-!/.idea/
+.idea
 *.iml
