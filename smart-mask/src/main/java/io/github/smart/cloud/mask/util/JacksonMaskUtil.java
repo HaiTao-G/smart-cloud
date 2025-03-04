@@ -35,7 +35,6 @@ import java.io.Serializable;
 @Slf4j
 public final class JacksonMaskUtil {
 
-
     private static final JsonMapper JSON_MAPPER = JsonMapper.builder()
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
             .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
@@ -87,6 +86,12 @@ public final class JacksonMaskUtil {
         return t;
     }
 
+    /**
+     * 解析json字符串
+     *
+     * @param content
+     * @return
+     */
     public static JsonNode parseObject(String content) {
         JsonNode t = null;
         try {

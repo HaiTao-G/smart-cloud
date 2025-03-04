@@ -33,14 +33,36 @@ public class LogUtil {
     private LogUtil() {
     }
 
-    public static String truncate(String format, Object... args) {
-        return truncate(LOG_MAX_LENGTH, format, args);
+    /**
+     * 截断日志内容
+     *
+     * @param format
+     * @param logMaxLength
+     * @param args
+     * @return
+     */
+    public static String truncate(String format, Integer logMaxLength, Object... args) {
+        return truncate(logMaxLength == null ? LOG_MAX_LENGTH : logMaxLength, format, args);
     }
 
+    /**
+     * 截断日志内容
+     *
+     * @param msg
+     * @return
+     */
     public static String truncate(String msg) {
         return truncate(msg, LOG_MAX_LENGTH);
     }
 
+    /**
+     * 截断日志内容
+     *
+     * @param maxLength
+     * @param format
+     * @param args
+     * @return
+     */
     public static String truncate(int maxLength, String format, Object... args) {
         if (args != null && args.length > 0) {
             for (int i = 0; i < args.length; i++) {
@@ -52,6 +74,13 @@ public class LogUtil {
         return truncate(msg, maxLength);
     }
 
+    /**
+     * 截断日志内容
+     *
+     * @param str
+     * @param maxWidth
+     * @return
+     */
     private static String truncate(final String str, final int maxWidth) {
         if (maxWidth < 0) {
             throw new IllegalArgumentException("maxWith cannot be negative");

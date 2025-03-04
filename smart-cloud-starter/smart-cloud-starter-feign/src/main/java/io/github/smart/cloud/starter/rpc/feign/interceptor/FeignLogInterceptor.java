@@ -60,21 +60,22 @@ public class FeignLogInterceptor implements MethodInterceptor, RequestIntercepto
                 FeignLogProperties feignLogProperties = smartProperties.getFeign().getLog();
                 long cost = System.currentTimeMillis() - startTime;
                 if (cost >= feignLogProperties.getSlowApiMinCost()) {
-                    log.warn(LogUtil.truncate("rpc.slow=>{}", buildFeignLogAspectDO(invocation.getMethod(), invocation.getArguments(), result, cost)));
+                    log.warn(LogUtil.truncate("rpc.slow=>{}", feignLogProperties.getLogMaxLength(), buildFeignLogAspectDO(invocation.getMethod(), invocation.getArguments(), result, cost)));
                 } else {
                     String level = feignLogProperties.getLevel();
                     if (LogLevel.DEBUG.equals(level) && log.isDebugEnabled()) {
-                        log.debug(LogUtil.truncate("rpc.info=>{}", buildFeignLogAspectDO(invocation.getMethod(), invocation.getArguments(), result, cost)));
+                        log.debug(LogUtil.truncate("rpc.info=>{}", feignLogProperties.getLogMaxLength(), buildFeignLogAspectDO(invocation.getMethod(), invocation.getArguments(), result, cost)));
                     } else if (LogLevel.INFO.equals(level) && log.isInfoEnabled()) {
-                        log.info(LogUtil.truncate("rpc.info=>{}", buildFeignLogAspectDO(invocation.getMethod(), invocation.getArguments(), result, cost)));
+                        log.info(LogUtil.truncate("rpc.info=>{}", feignLogProperties.getLogMaxLength(), buildFeignLogAspectDO(invocation.getMethod(), invocation.getArguments(), result, cost)));
                     } else if (LogLevel.WARN.equals(level)) {
-                        log.warn(LogUtil.truncate("rpc.info=>{}", buildFeignLogAspectDO(invocation.getMethod(), invocation.getArguments(), result, cost)));
+                        log.warn(LogUtil.truncate("rpc.info=>{}", feignLogProperties.getLogMaxLength(), buildFeignLogAspectDO(invocation.getMethod(), invocation.getArguments(), result, cost)));
                     }
                 }
             }
         } catch (Exception e) {
             long cost = System.currentTimeMillis() - startTime;
-            log.error(LogUtil.truncate("rpc.error=>{}", buildFeignLogAspectDO(invocation.getMethod(), invocation.getArguments(), result, cost)), e);
+            FeignLogProperties feignLogProperties = smartProperties.getFeign().getLog();
+            log.error(LogUtil.truncate("rpc.error=>{}", feignLogProperties.getLogMaxLength(), buildFeignLogAspectDO(invocation.getMethod(), invocation.getArguments(), result, cost)), e);
             throw e;
         } finally {
             // 方法调用顺序：apply（初始化值） ——> invoke（获取值，并清除）

@@ -29,7 +29,7 @@ class LogUtilTest {
         for (int i = 0; i < LOG_MAX_LENGTH; i++) {
             context.append('0');
         }
-        Assertions.assertThat(LogUtil.truncate(context.append("{}").toString(), "xxxxx").length()).isLessThanOrEqualTo(LOG_MAX_LENGTH);
+        Assertions.assertThat(LogUtil.truncate(2048,context.append("{}").toString(), "xxxxx").length()).isLessThanOrEqualTo(LOG_MAX_LENGTH);
     }
 
     @Test
